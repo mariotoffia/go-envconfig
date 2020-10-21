@@ -73,17 +73,17 @@ type DatabaseConfig struct {
 The original library did not allow for writing values that where zero or nil. This is customized and is now externalized. The default behaviour is still the same.
 
 ```go
-l := envconfig.PrefixLookuper(sc.renderEnvPrefix(), envconfig.OsLookuper())
 ctx := context.Background()
 
 var c MyConfig
-err := envconfig.ProcessWith(ctx,&c,l, 
-  func(ctx context.Context, value reflect.Value) bool {
-    return true // always override
-})
+err := envconfig.ProcessWith(ctx,&c,OsLookuper(),WriteAll)
 ```
 
-The above example allows for all fields to be written independant on their current value. 
+The above example allows for all fields to be written independent on their current value. The `WriteAll` is a go function
+
+```go
+var WriteAll = func(ctx context.Context, value reflect.Value) bool { return true }
+```
 
 ## Configuration
 

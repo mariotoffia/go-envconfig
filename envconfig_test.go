@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -1538,14 +1537,7 @@ func TestProcessWithAlwaysSet(t *testing.T) {
 
 	q := Quark{Value: 42}
 
-	err := ProcessWith(
-		context.Background(),
-		&q,
-		OsLookuper(),
-		func(ctx context.Context, value reflect.Value) bool {
-			return true // always set
-		},
-	)
+	err := ProcessWith(context.Background(), &q, OsLookuper(), WriteAll)
 
 	if err != nil {
 		t.Fatalf("Failed to process %#v error: %s", q, err.Error())

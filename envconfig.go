@@ -96,17 +96,29 @@ func (e Error) Error() string {
 }
 
 const (
-	ErrInvalidMapItem     = Error("invalid map item")
-	ErrLookuperNil        = Error("lookuper cannot be nil")
-	ErrDeciderNil         = Error("decider function cannot be nil")
-	ErrMissingKey         = Error("missing key")
-	ErrMissingRequired    = Error("missing required value")
-	ErrNotPtr             = Error("input must be a pointer")
-	ErrNotStruct          = Error("input must be a struct")
-	ErrPrefixNotStruct    = Error("prefix is only valid on struct types")
-	ErrPrivateField       = Error("cannot parse private fields")
+	// ErrInvalidMapItem is thrown when a invalid map item was encountered
+	ErrInvalidMapItem = Error("invalid map item")
+	// ErrLookuperNil is an error stating that the provided `Lookuper` is nil
+	ErrLookuperNil = Error("lookuper cannot be nil")
+	// ErrDeciderNil is an error stating that the `DeciderFunction` is nil
+	ErrDeciderNil = Error("decider function cannot be nil")
+	// ErrMissingKey is returned when missing key
+	ErrMissingKey = Error("missing key")
+	// ErrMissingRequired is returned when a env tag with required and no
+	// corresponding environment variable was found.
+	ErrMissingRequired = Error("missing required value")
+	// ErrNotPtr states that the input must be a pointer
+	ErrNotPtr = Error("input must be a pointer")
+	// ErrNotStruct states that the input must be a struct
+	ErrNotStruct = Error("input must be a struct")
+	// ErrPrefixNotStruct is an error returned when a prefix is bound to a non struct type
+	ErrPrefixNotStruct = Error("prefix is only valid on struct types")
+	// ErrPrivateField is returned when a env tag is set on a private field.
+	ErrPrivateField = Error("cannot parse private fields")
+	// ErrRequiredAndDefault is when field cannot be required and have a default value
 	ErrRequiredAndDefault = Error("field cannot be required and have a default value")
-	ErrUnknownOption      = Error("unknown option")
+	// ErrUnknownOption is when supplied an unknown option
+	ErrUnknownOption = Error("unknown option")
 )
 
 // Lookuper is an interface that provides a lookup for a string-based key.
@@ -222,6 +234,11 @@ type DeciderFunc func(ctx context.Context, value reflect.Value) bool
 var DefaultDeciderFunc = func(ctx context.Context, value reflect.Value) bool {
 	return value.IsZero()
 }
+
+// WriteAll will always write all fields with an `env` tag and has corresponding
+// environment value. This is the opposite of default where it only writes such
+// when a variable is zero or nil.
+var WriteAll = func(ctx context.Context, value reflect.Value) bool { return true }
 
 // options are internal options for decoding.
 type options struct {
@@ -440,7 +457,7 @@ func lookup(key string, opts *options, l Lookuper) (string, error) {
 }
 
 // processAsDecoder processes the given value as a decoder or custom
-// unmarshaller.
+// unmarshaler.
 func processAsDecoder(v string, ef reflect.Value) (bool, error) {
 	// Keep a running error. It's possible that a property might implement
 	// multiple decoders, and we don't know *which* decoder will succeed. If we
