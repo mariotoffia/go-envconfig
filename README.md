@@ -3,6 +3,8 @@
 [![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://pkg.go.dev/mod/github.com/sethvargo/go-envconfig)
 [![GitHub Actions](https://img.shields.io/github/workflow/status/sethvargo/go-envconfig/Test?style=flat-square)](https://github.com/sethvargo/go-envconfig/actions?query=workflow%3ATest)
 
+**CAUTION: Do not use this, instead use the original [sethvargo/go-envconfig](https://github.com/sethvargo/go-envconfig) - this has been overridden with functions not accepted by the original author.**
+
 Envconfig populates struct field values based on environment variables or
 arbitrary lookup functions. It supports pre-setting mutations, which is useful
 for things like converting values to uppercase, trimming whitespace, or looking
