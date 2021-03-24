@@ -437,6 +437,11 @@ func lookup(key string, opts *options, l Lookuper) (string, error) {
 	val, ok := l.Lookup(key)
 	if !ok {
 		if opts.Required {
+
+			if pl, ok := l.(*prefixLookuper); ok {
+				key = pl.prefix + key
+			}
+
 			return "", fmt.Errorf("%w: %s", ErrMissingRequired, key)
 		}
 
